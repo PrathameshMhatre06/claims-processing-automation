@@ -1,11 +1,14 @@
+import os
 import time
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy.exc import OperationalError
 
-DATABASE_URL = "postgresql://postgres:postgres@db:5432/claimsdb"
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-# Retry logic for DB connection
+if not DATABASE_URL:
+    raise RuntimeError("DATABASE_URL not set")
+
 for i in range(10):
     try:
         engine = create_engine(DATABASE_URL)
